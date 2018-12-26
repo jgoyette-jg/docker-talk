@@ -1,0 +1,48 @@
+keycloak-client:
+  server-url: http://keycloak:8080/auth
+  realm: test
+  registration-id: my-keycloak
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: gateway
+  security:
+    oauth2:
+      resourceserver:
+          jwt:
+            jwk-set-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/certs
+      client:
+        registration:
+          my-keycloak:
+            client-id: gateway
+            client-secret: 75228c17-cd72-4c43-903b-7a694a4582e1
+            provider: keycloak
+            scope: openid, profile
+            redirect-uri-template: "{baseUrl}/login/oauth2/code/{registrationId}"
+            authorization-grant-type: authorization_code
+        provider:
+          keycloak:
+            token-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/token
+            authorization-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/auth
+            user-info-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/userinfo
+            jwk-set-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/certs
+            user-name-attribute: preferred_username
+server:
+  port: 8762
+  servlet:
+    context-path:
+eureka:
+  client:
+    service-url:
+      defaultZone: http://registry:8761/eureka
+    enabled: true
+  instance:
+    prefer-ip-address: true
+
+logging:
+  level:
+    org:
+      springframework:
+        security: TRACE

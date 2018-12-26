@@ -1,0 +1,82 @@
+server:
+  port: 8115
+
+keycloak-client:
+  server-url: http://keycloak:8080/auth
+  realm: test
+  registration-id: test-app
+
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://registry:8761/eureka
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: app2
+  datasource:
+    username: spring_poc
+    password: poc_admin
+    url: jdbc:postgresql://postgres:5432/spring_poc
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  security:
+    oauth2:
+      resourceserver:
+          jwt:
+            jwk-set-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/certs
+      client:
+        registration:
+          # This 'Demo:' is the id used inside the redirect-uri-template and must be the same as your realm
+          my-keycloak:
+            client-id: test-app
+            client-secret: 2519e65b-0095-4f93-8409-3cb77aeff8e7
+            client-name: some client
+            provider: keycloak
+            scope: openid, profile
+            redirect-uri-template: "{baseUrl}/login/oauth2/code/{registrationId}"
+            authorization-grant-type: authorization_code
+        provider:
+          keycloak:
+            token-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/token
+            authorization-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/auth
+            user-info-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/userinfo
+            jwk-set-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/certs
+            user-name-attribute: preferred_username
+logging:
+  level:
+    org:
+      springframework:
+        security: TRACE
+
+---
+spring:
+  profiles: noServiceDiscovery
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+
+---
+spring:
+  profiles: local
+  datasource:
+    url: jdbc:postgresql://localhost:5432/spring_poc
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
