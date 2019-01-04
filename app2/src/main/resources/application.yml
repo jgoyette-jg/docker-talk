@@ -39,7 +39,7 @@ spring:
           # This 'Demo:' is the id used inside the redirect-uri-template and must be the same as your realm
           my-keycloak:
             client-id: test-app
-            client-secret: 2519e65b-0095-4f93-8409-3cb77aeff8e7
+            client-secret: e48a7e9a-4246-40d2-a4c2-9f26888573d6
             client-name: some client
             provider: keycloak
             scope: openid, profile
@@ -52,11 +52,6 @@ spring:
             user-info-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/userinfo
             jwk-set-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/certs
             user-name-attribute: preferred_username
-logging:
-  level:
-    org:
-      springframework:
-        security: TRACE
 
 ---
 spring:

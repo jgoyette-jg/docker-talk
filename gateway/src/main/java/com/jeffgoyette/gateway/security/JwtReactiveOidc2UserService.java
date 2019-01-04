@@ -1,5 +1,6 @@
 package com.jeffgoyette.gateway.security;
 
+import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +17,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class JwtReactiveOidc2UserService extends OidcReactiveOAuth2UserService {
 
     private final ReactiveJwtDecoder jwtDecoder;
@@ -34,9 +36,9 @@ public class JwtReactiveOidc2UserService extends OidcReactiveOAuth2UserService {
 
 
     private Collection<? extends GrantedAuthority> toGrantedAuthorities(Map<String, Object> claims) {
-        JSONObject stringAuthorities = (JSONObject) claims.get("resource_access");
-        JSONObject application = (JSONObject) stringAuthorities.get("test-app");
-        JSONArray roles = (JSONArray) application.get("roles");
+        log.info(claims.toString());
+        JSONObject stringAuthorities = (JSONObject) claims.get("realm_access");
+        JSONArray roles = (JSONArray) stringAuthorities.get("roles");
         if (stringAuthorities != null) {
             return roles.stream().map(value -> new SimpleGrantedAuthority(value.toString())).collect(Collectors.toList());
         } else {

@@ -17,7 +17,7 @@ spring:
         registration:
           my-keycloak:
             client-id: gateway
-            client-secret: 75228c17-cd72-4c43-903b-7a694a4582e1
+            client-secret: fa6d64f0-246d-431b-90db-30c1fd3acd13
             provider: keycloak
             scope: openid, profile
             redirect-uri-template: "{baseUrl}/login/oauth2/code/{registrationId}"
@@ -33,6 +33,8 @@ server:
   port: 8762
   servlet:
     context-path:
+  error:
+    include-stacktrace: always
 eureka:
   client:
     service-url:
@@ -44,5 +46,5 @@ eureka:
 logging:
   level:
     org:
-      springframework:
-        security: TRACE
+      springframework: TRACE
+

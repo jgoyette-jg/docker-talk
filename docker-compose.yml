@@ -52,7 +52,8 @@ services:
   postgres:
     image: postgres
     volumes:
-      - /Users/jgoye/postgres:/var/lib/postgresql
+      #- /Users/jgoye/postgres:/var/lib/postgresql
+      - C:/Users/Jeff/workspace/postgres:/var/lib/postgresql
     ports:
       - "5432:5432"
     healthcheck:

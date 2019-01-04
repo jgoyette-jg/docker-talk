@@ -1,6 +1,5 @@
 package com.jeffgoyette.app2.config;
 
-import com.jeffgoyette.app2.security.KeycloakOauth2UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +31,6 @@ public class SecurityConfig {
     @Bean
     public WebSecurityConfigurerAdapter webSecurityConfigurer(
             @Value("${keycloak-client.registration-id}") final String registrationId
-            , KeycloakOauth2UserService keycloakOidcUserService
     ) {
         return new WebSecurityConfigurerAdapter() {
             @Override
@@ -42,24 +40,6 @@ public class SecurityConfig {
                         .and()
                         .oauth2ResourceServer()
                         .jwt().jwtAuthenticationConverter(grantedAuthoritiesExtractor(registrationId));
-//                        // Configure session management to your needs.
-//                        // I need this as a basis for a classic, server side rendered application
-//                        .sessionManagement()
-//                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-//                        .and()
-//                        // Depends on your taste. You can configure single paths here
-//                        // or allow everything a I did and then use method based security
-//                        // like in the controller below
-//                        .authorizeRequests()
-//                        .anyRequest().permitAll()
-//                        .and()
-//                        // This is the point where OAuth2 login of Spring 5 gets enabled
-//                        .oauth2Login().userInfoEndpoint().oidcUserService(keycloakOidcUserService)
-//                        .and()
-//                        // I don't want a page with different clients as login options
-//                        // So i use the constant from OAuth2AuthorizationRequestRedirectFilter
-//                        // plus the configured realm as immediate redirect to Keycloak
-//                        .loginPage(DEFAULT_AUTHORIZATION_REQUEST_BASE_URI + "/" + registrationId);
             }
         };
     }
@@ -98,23 +78,5 @@ public class SecurityConfig {
             }
         };
     }
-
-//    @Bean
-//    KeycloakOauth2UserService keycloakOidcUserService(OAuth2ClientProperties oauth2ClientProperties) {
-//
-//        // TODO use default JwtDecoder - where to grab?
-//        NimbusJwtDecoderJwkSupport jwtDecoder = new NimbusJwtDecoderJwkSupport(
-//                oauth2ClientProperties.getProvider().get("keycloak").getJwkSetUri());
-//
-//        SimpleAuthorityMapper authoritiesMapper = new SimpleAuthorityMapper();
-//        authoritiesMapper.setConvertToUpperCase(true);
-//
-//        return new KeycloakOauth2UserService(jwtDecoder, authoritiesMapper);
-//    }
-//
-//    @Bean
-//    KeycloakLogoutHandler keycloakLogoutHandler() {
-//        return new KeycloakLogoutHandler(new RestTemplate());
-//    }
 
 }
