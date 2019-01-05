@@ -29,6 +29,7 @@ public class JwtReactiveOidc2UserService extends OidcReactiveOAuth2UserService {
     @Override
     public Mono<OidcUser> loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
         Mono<OidcUser> user = super.loadUser(userRequest);
+        log.info(userRequest.getAccessToken().toString());
         return jwtDecoder.decode(userRequest.getAccessToken()
                 .getTokenValue())
                 .flatMap(jwt -> user.map(keycloakUser -> new DefaultOidcUser(toGrantedAuthorities(jwt.getClaims()), userRequest.getIdToken(), keycloakUser.getUserInfo(), "preferred_username")));

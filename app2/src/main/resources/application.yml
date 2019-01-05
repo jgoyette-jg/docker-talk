@@ -1,5 +1,5 @@
 server:
-  port: 8115
+  port: 8111
 
 keycloak-client:
   server-url: http://keycloak:8080/auth
@@ -53,6 +53,10 @@ spring:
             jwk-set-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/certs
             user-name-attribute: preferred_username
 
+logging:
+  level:
+    org:
+      springframework: TRACE
 ---
 spring:
   profiles: noServiceDiscovery

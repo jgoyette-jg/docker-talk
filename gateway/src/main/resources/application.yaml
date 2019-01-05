@@ -29,6 +29,11 @@ spring:
             user-info-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/userinfo
             jwk-set-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/certs
             user-name-attribute: preferred_username
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
 server:
   port: 8762
   servlet:
@@ -43,8 +48,16 @@ eureka:
   instance:
     prefer-ip-address: true
 
-logging:
-  level:
-    org:
-      springframework: TRACE
+#logging:
+#  level:
+#    org:
+#      springframework: TRACE
 
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: gateway
